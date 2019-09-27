@@ -1,4 +1,4 @@
-#include <stdio.h> /*file handling and i/o*/
+#include <stdio.h>
 #include <stdlib.h> /*exit()*/
 #include <string.h> /*strlen()*/
 #include <errno.h> /*error handling*/
@@ -16,7 +16,7 @@ void show_help(char *nome){
 
 int main(int argc, char *argv[]){
 
-	char server[INET6_ADDRSTRLEN];
+	char server[INET6_ADDRSTRLEN] = "";
 	int rc = 0; /*variavel que recebe o retorno das chamadas de funcao*/
 
 	if (argc < 3) {
