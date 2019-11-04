@@ -9,41 +9,56 @@
 #include <netinet/in.h> /*INET6_ADDRSTRLEN*/
 #include "transporte.h"
 
-void show_help(char *nome){
-	fprintf(stderr, "Uso: %s -d ENDERECO [ARQUIVOS]...\n", nome);
+void showHelp(char *nome)
+{
+	fprintf(stderr, "##### USO DE %s #####\n\n### MOSTRAR O HELPER ###\n"
+        "-h (ou --help ou --ajuda)\n\n"
+        "### ENVIAR ARQUIVOS AO ENDERECO ###\n"
+        "-s (ou --send ou --enviar) ENDERECO [ARQUIVO_1] [ARQUIVO_2] ... [ARQUIVO_N]\n", nome);
     exit(EXIT_FAILURE);
 }
 
-int main(int argc, char *argv[]){
+int main(int argc, char *argv[])
+{
 
-	char server[INET6_ADDRSTRLEN] = "";
+	char serverAddress[INET6_ADDRSTRLEN] = ""; // INET6_ADDRSTRLEN = 46 bytes
 	int rc = 0; /*variavel que recebe o retorno das chamadas de funcao*/
 
-	if (argc < 3) {
-        show_help(argv[0]);
+	if (argc < 2) {
+        showHelp(argv[0]); // Mostra helper caso usuario nao defina nenhuma acao apos execucao do programa(-h ou -s)
     }
 
 	int opt;
-	const struct option longopts[] = {
+	const struct option longopts[] =
+	{
         {"help"     , no_argument       , NULL , 'h'},
         {"ajuda"    , no_argument       , NULL , 'h'},
-        {"adress"   , required_argument , NULL , 'd'},
-        {"endereco" , required_argument , NULL , 'd'},
-        {"destino"  , required_argument , NULL , 'd'},
+        {"send"   , required_argument , NULL , 's'},
+        {"enviar"  , required_argument , NULL , 's'},
         {0          , 0                 , 0    ,  0 },
 	} ;
 
-	while ( (opt = getopt_long(argc, argv, "hd:", longopts, NULL)) > 0 ) {
+	// Verifica a corretude dos comandos digitados
+	while ( (opt = getopt_long(argc, argv, "hs:", longopts, NULL)) > 0 )
+	{
 		switch ( opt ) {
         case 'h': /* -h ou --help */
-            show_help(argv[0]);
+            showHelp(argv[0]);
             break ;
-        case 'd': /* -d ou --destino */
+        case 's': /* -s ou --send */
             if(strlen(optarg) >= INET6_ADDRSTRLEN){
             	fprintf(stderr, "Erro: endereco de destino muito grande\n") ;
             	exit(EXIT_FAILURE);
             }
-            strcpy(server, optarg);
+
+            strcpy(serverAddress, optarg); // coloca endereco escolhido pelo usuario na string 'server'
+
+            if(argv[optind] == NULL)
+            {
+                printf("Erro: argumento [ARQUIVO] nao encontrado\nEncerrando aplicacao...\n");
+                exit(EXIT_FAILURE);
+            }
+
             break ;
         default:
             fprintf(stderr, "Erro: opcao invalida ou faltando argumento: '%c'\n", optopt) ;
@@ -51,14 +66,36 @@ int main(int argc, char *argv[]){
 		}
 	}
 
-	while ( argv[optind] != NULL ) {
+    // CRIA E CONFIGURA SOCKET CLIENTE //
+
+    int sockfd, connfd; 
+    struct sockaddr_in servaddr, cli; 
+  
+    // socket create and varification
+    sockfd = criaSocket();
+
+    // assign IP, PORT 
+    servaddr = defineEndereco();
+  
+    // connect the client socket to server socket 
+    if (connect(sockfd, (SA*)&servaddr, sizeof(servaddr)) != 0) { 
+        printf("connection with the server failed...\n"); 
+        exit(0); 
+    } 
+    else
+        printf("connected to the server..\n"); 
+
+    /////////////////////////////////////
+    
+	while ( argv[optind] != NULL )
+	{
 		struct stat s ;
         if ( stat(argv[optind], &s) == -1 ){
         	printf("Erro em arquivo \"%s\": %s\n", argv[optind], strerror(errno));
         	++optind;
         	continue;
         }
-        if( enviarArquivo(argv[optind], server, s.st_blocks) >= 0 ) {
+        if( enviarArquivo(argv[optind], serverAddress, s.st_blocks) ) {
         	printf("Arquivo \"%s\" transmitido com sucesso!\n", argv[optind]);
         }else{
         	fprintf(stderr, "Erro: falha na transmissao do arquivo \"%s\"\n", argv[optind]);
@@ -67,4 +104,26 @@ int main(int argc, char *argv[]){
     }
 
 	return 0;
+}
+
+int criaSocket()
+{
+    int sockfd = socket(AF_INET,SOCK_STREAM,0);
+    if(sockfd==-1)
+    {
+        printf("socket creation failed...\n"); 
+        exit(0); 
+    }
+    printf("Socket successfully created..\n");  
+    return sockfd;
+}
+
+sockaddr_in defineEndereco()
+{
+    sockaddr_in servidorTemp;
+    bzero(&servidorTemp, sizeof(servidorTemp));
+    servidorTemp.sin_family = AF_INET;
+    servidorTemp.sin_addr.s_addr = htonl("127.0.0.1");
+    servidorTemp.sin_port = htons(PORT);
+    return servidorTemp;
 }
