@@ -21,6 +21,6 @@
 #define SA struct sockaddr
 #define MAX 80
 
-int enviarArquivo(char * nome, char * destino, blkcnt_t nblocks);
+//int enviarArquivo(char * nome, char * destino, blkcnt_t nblocks);
 
 #endif

@@ -3,21 +3,23 @@
 
 void showHelp(char *nome);
 void conectarClienteAoServidor(int sockfd, struct sockaddr_in *servaddr);
-void sendfile(FILE *fp, int sockfd);
+void enviarArquivo(FILE *fp, int sockfd);
 
 ssize_t total=0;
 
 int main(int argc, char *argv[])
 {
-    char serverAddress[INET6_ADDRSTRLEN] = ""; // INET6_ADDRSTRLEN = 46 bytes
-    int rc = 0; /*variavel que recebe o retorno das chamadas de funcao*/
 
+    // INET6_ADDRSTRLEN = 46 bytes
+    char serverAddress[INET6_ADDRSTRLEN] = "";
+
+    // Mostra helper caso usuario nao defina nenhuma acao apos execucao do programa(-h ou -s)
     if (argc < 2)
     {
-        showHelp(argv[0]); // Mostra helper caso usuario nao defina nenhuma acao apos execucao do programa(-h ou -s)
+        showHelp(argv[0]); 
     }
 
-    int opt;
+    // Cria vetor de struct para opcoes que usuario escolhera
     const struct option longopts[] =
     {
         {"help"     , no_argument       , NULL , 'h'},
@@ -28,6 +30,7 @@ int main(int argc, char *argv[])
     };
 
     // Verifica a corretude dos comandos digitados
+    int opt;
     while ( (opt = getopt_long(argc, argv, "hs:", longopts, NULL)) > 0 )
     {
         switch ( opt )
@@ -41,7 +44,7 @@ int main(int argc, char *argv[])
                     fprintf(stderr, "Erro: endereco de destino muito grande\n");
                     exit(EXIT_FAILURE);
                 }
-                strcpy(serverAddress, optarg); // coloca endereco escolhido pelo usuario na string 'server'
+                strcpy(serverAddress, optarg); // coloca endereco escolhido pelo usuario na string 'serverAddress'
                 if(argv[optind] == NULL)
                 {
                     printf("Erro: argumento [ARQUIVO] nao encontrado\nEncerrando aplicacao...\n");
@@ -54,7 +57,7 @@ int main(int argc, char *argv[])
         }
     }
 
-    // CRIA E CONFIGURA SOCKET CLIENTE //
+    ////////// Acoes para o Socket //////////
 
     int sockfd, connfd; 
     struct sockaddr_in servaddr, clientaddr; 
@@ -66,18 +69,10 @@ int main(int argc, char *argv[])
     servaddr = defineEndereco(serverAddress, 1);
 
     // Tentativa de estabelecer conexao com o servidor para envio de arquivo
-    //conectarClienteAoServidor(sockfd, &servaddr);
-    if (connect(sockfd, (SA*)&servaddr, sizeof(servaddr)) != 0)
-    { 
-        printf("Conexão com o servidor falhou...\nEncerrando aplicacao...\n"); 
-        exit(0); 
-    } 
-    else
-    {
-        printf("Conectado ao servidor!\n"); 
-    }
+    conectarClienteAoServidor(sockfd, &servaddr);
 
-    // ARQUIVO //
+    ////////// Acoes referentes ao Arquivo //////////
+
     char *filename = basename(argv[3]); // abrindo argumento referente ao arquivo. precisa generalizar 
     if (filename == NULL)
     {
@@ -89,18 +84,18 @@ int main(int argc, char *argv[])
     strncpy(buff, filename, strlen(filename));
     if (send(sockfd, buff, BUFFSIZE, 0) == -1)
     {
-        perror("Can't send filename");
+        perror("Erro! Nao foi possivel enviar o arquivo. Encerrando aplicacao...\n");
         exit(1);
     }
     
     FILE *fp = fopen(argv[3], "rb");
     if (fp == NULL) 
     {
-        perror("Can't open file");
+        perror("Erro! Nao foi possivel abrir o arquivo. Encerrando aplicacao...\n");
         exit(1);
     }
 
-    sendfile(fp, sockfd);
+    enviarArquivo(fp, sockfd);
     printf("Envio realizado com sucesso! Numero de Bytes = %ld\n", total);
 
     // Fechando arquivo
@@ -120,7 +115,7 @@ int main(int argc, char *argv[])
             ++optind;
             continue;
         }
-        if( enviarArquivo(argv[optind], serverAddress, s.st_blocks) )
+        if( /*enviarArquivo(argv[optind], serverAddress, s.st_blocks)*/ 1 )
         {
            printf("Arquivo \"%s\" transmitido com sucesso!\n", argv[optind]);
         }
@@ -144,18 +139,18 @@ void showHelp(char *nome)
 
 void conectarClienteAoServidor(int sockfd, struct sockaddr_in *servaddr)
 {
-    if (connect(sockfd, (SA*)servaddr, sizeof(servaddr)) != 0)
+    if (connect(sockfd, (SA*)&(*servaddr), sizeof((*servaddr))) != 0)
     { 
-        printf("connection with the server failed...\n"); 
+        printf("Conexão com o servidor falhou...\nEncerrando aplicacao...\n"); 
         exit(0); 
     } 
     else
     {
-        printf("connected to the server..\n"); 
+        printf("Conectado ao servidor!\n");
     }
 }
 
-void sendfile(FILE *fp, int sockfd) 
+void enviarArquivo(FILE *fp, int sockfd) 
 {
     int n; 
     char sendline[MAX_LINE] = {0}; 
