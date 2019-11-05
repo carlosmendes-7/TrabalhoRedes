@@ -18,7 +18,7 @@ void func(int sockfd);
 
 int main(int argc, char *argv[])
 {
-	int sockfd, connfd, len; 
+    int sockfd, connfd, len; 
     struct sockaddr_in servaddr, cli; 
   
     // socket create and verification 

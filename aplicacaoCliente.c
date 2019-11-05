@@ -20,28 +20,28 @@ void func(int sockfd); //TESTANDO MSG DE TEXTO COM SERVIDOR
 
 int main(int argc, char *argv[])
 {
-	char serverAddress[INET6_ADDRSTRLEN] = ""; // INET6_ADDRSTRLEN = 46 bytes
-	int rc = 0; /*variavel que recebe o retorno das chamadas de funcao*/
+    char serverAddress[INET6_ADDRSTRLEN] = ""; // INET6_ADDRSTRLEN = 46 bytes
+    int rc = 0; /*variavel que recebe o retorno das chamadas de funcao*/
 
-	if (argc < 2)
+    if (argc < 2)
     {
         showHelp(argv[0]); // Mostra helper caso usuario nao defina nenhuma acao apos execucao do programa(-h ou -s)
     }
 
-	int opt;
-	const struct option longopts[] =
-	{
+    int opt;
+    const struct option longopts[] =
+    {
         {"help"     , no_argument       , NULL , 'h'},
         {"ajuda"    , no_argument       , NULL , 'h'},
         {"send"   , required_argument , NULL , 's'},
         {"enviar"  , required_argument , NULL , 's'},
         {0          , 0                 , 0    ,  0 },
-	};
+    };
 
-	// Verifica a corretude dos comandos digitados
-	while ( (opt = getopt_long(argc, argv, "hs:", longopts, NULL)) > 0 )
-	{
-		switch ( opt )
+    // Verifica a corretude dos comandos digitados
+    while ( (opt = getopt_long(argc, argv, "hs:", longopts, NULL)) > 0 )
+    {
+        switch ( opt )
         {
             case 'h': /* -h ou --help */
                 showHelp(argv[0]);
@@ -49,10 +49,10 @@ int main(int argc, char *argv[])
             case 's': /* -s ou --send */
                 if(strlen(optarg) >= INET6_ADDRSTRLEN)
                 {
-                	fprintf(stderr, "Erro: endereco de destino muito grande\n");
-                	exit(EXIT_FAILURE);
+                    fprintf(stderr, "Erro: endereco de destino muito grande\n");
+                    exit(EXIT_FAILURE);
                 }
-                strcpy(serverAddress, optarg); // coloca endereco escolhido pelo usuario na string 'server'
+                    strcpy(serverAddress, optarg); // coloca endereco escolhido pelo usuario na string 'server'
                 if(argv[optind] == NULL)
                 {
                     printf("Erro: argumento [ARQUIVO] nao encontrado\nEncerrando aplicacao...\n");
@@ -61,21 +61,21 @@ int main(int argc, char *argv[])
                 break;
             default:
                 fprintf(stderr, "Erro: opcao invalida ou faltando argumento: '%c'\n", optopt);
-                exit(EXIT_FAILURE); 
-		}
-	}
+                exit(EXIT_FAILURE);
+        }
+    }
 
     // CRIA E CONFIGURA SOCKET CLIENTE //
 
     int sockfd, connfd; 
     struct sockaddr_in servaddr, cli; 
-  
+
     // socket create and varification
     sockfd = criaSocket();
 
     // assign IP, PORT 
     servaddr = defineEndereco("127.0.0.1");
-  
+
     // connect the client socket to server socket 
     if (connect(sockfd, (SA*)&servaddr, sizeof(servaddr)) != 0)
     { 
@@ -86,35 +86,35 @@ int main(int argc, char *argv[])
     {
         printf("connected to the server..\n"); 
     }
-    
+
     // function for chat 
     func(sockfd); 
-  
+
     // close the socket 
     close(sockfd); 
 
     /////////////////////////////////////
-    
-	while ( argv[optind] != NULL )
-	{
-		struct stat s ;
+
+    while ( argv[optind] != NULL )
+    {
+        struct stat s ;
         if ( stat(argv[optind], &s) == -1 )
         {
-        	printf("Erro em arquivo \"%s\": %s\n", argv[optind], strerror(errno));
-        	++optind;
-        	continue;
+            printf("Erro em arquivo \"%s\": %s\n", argv[optind], strerror(errno));
+            ++optind;
+            continue;
         }
         if( enviarArquivo(argv[optind], serverAddress, s.st_blocks) )
         {
-        	printf("Arquivo \"%s\" transmitido com sucesso!\n", argv[optind]);
+           printf("Arquivo \"%s\" transmitido com sucesso!\n", argv[optind]);
         }
         else
         {
-        	fprintf(stderr, "Erro: falha na transmissao do arquivo \"%s\"\n", argv[optind]);
+           fprintf(stderr, "Erro: falha na transmissao do arquivo \"%s\"\n", argv[optind]);
         }
         ++optind;
     }
-	return 0;
+    return 0;
 }
 
 void showHelp(char *nome)
