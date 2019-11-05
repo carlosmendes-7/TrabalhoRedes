@@ -1,7 +1,6 @@
 #include "socketHandler.h"
 #include "transporte.h"
 
-void func(int sockfd);
 void writefile(int sockfd, FILE *fp);
 
 ssize_t total=0;
@@ -11,46 +10,46 @@ int main(int argc, char *argv[])
     int sockfd, connfd, len; 
     struct sockaddr_in servaddr, clientaddr; 
   
-    // socket create and verification 
+    // Verifica e cria socket
     sockfd = criaSocket();
 
-    // assign IP, PORT 
-    servaddr = defineEndereco("127.0.0.1");
+    // Define Endereco e porta
+    servaddr = defineEndereco("", 0);
 
-    // Binding newly created socket to given IP and verification 
+    // Bindando socket
     if ((bind(sockfd, (SA*)&servaddr, sizeof(servaddr))) != 0)
     { 
-        printf("socket bind failed...\n"); 
+        printf("Erro! Falha no bind.\nEncerrando a aplicacao...\n"); 
         exit(0); 
     } 
     else
     {
-        printf("Socket successfully binded..\n"); 
+        printf("Bind realizado com sucesso!\n"); 
     }
   
-    // Now server is ready to listen and verification
+    // Realizando listen
     if ((listen(sockfd, 5)) != 0)
     { 
-        printf("Listen failed...\n"); 
+        printf("Erro! Falha no listen.\nEncerrando a aplicacao...\n"); 
         exit(0); 
     } 
     else
     {
-        printf("Server listening..\n"); 
+        printf("Listen realizado com sucesso!\n"); 
     }
 
     len = sizeof(clientaddr); 
   
-    // Accept the data packet from client and verification 
+    // Tentativa de estabelecer conexao entre cliente-servidor (aceitar solicitacao do cliente)
     connfd = accept(sockfd, (SA*)&clientaddr, &len); 
     if (connfd < 0)
     { 
-        printf("server acccept failed...\n"); 
+        printf("Erro! Servidor recusou comunicacao.\nEncerrando a aplicacao...\n"); 
         exit(0); 
     } 
     else
     {
-        printf("server acccept the client...\n");
+        printf("Conexao entre servidor e cliente realizada com sucesso!\n");
     }
 
     // ARQUIVO //
@@ -69,48 +68,16 @@ int main(int argc, char *argv[])
     }
     
     char addr[INET_ADDRSTRLEN];
-    printf("Start receive file: %s from %s\n", filename, inet_ntop(AF_INET, &clientaddr.sin_addr, addr, INET_ADDRSTRLEN));
+    printf("Comecando a transferencia do arquivo: %s de %s\n", filename, inet_ntop(AF_INET, &clientaddr.sin_addr, addr, INET_ADDRSTRLEN));
     writefile(connfd, fp);
-    printf("Receive Success, NumBytes = %ld\n", total);
-    fclose(fp);
+    printf("Arquivo recebido com sucesso! Numero de Bytes = %ld\n", total);
 
-    // Function for chatting between client and server 
-    //func(connfd); 
+    // Fechando arquivo
+    fclose(fp);
   
-    // After chatting close the socket 
+    // Fechando socket 
     close(sockfd); 
 }
-
-// Function designed for chat between client and server. 
-void func(int sockfd) 
-{ 
-    char buff[MAX]; 
-    int n; 
-    // infinite loop for chat 
-    for (;;)
-    { 
-        bzero(buff, MAX); 
-  
-        // read the message from client and copy it in buffer 
-        read(sockfd, buff, sizeof(buff)); 
-        // print buffer which contains the client contents 
-        printf("From client: %s\t To client : ", buff); 
-        bzero(buff, MAX); 
-        n = 0; 
-        // copy server message in the buffer 
-        while ((buff[n++] = getchar()) != '\n'); 
-  
-        // and send that buffer to client 
-        write(sockfd, buff, sizeof(buff)); 
-  
-        // if msg contains "Exit" then server exit and chat ended. 
-        if (strncmp("exit", buff, 4) == 0)
-        { 
-            printf("Server Exit...\n"); 
-            break; 
-        } 
-    } 
-} 
 
 void writefile(int sockfd, FILE *fp)
 {

@@ -1,12 +1,8 @@
 #include "socketHandler.h"
 #include "transporte.h"
 
-
-
-
 void showHelp(char *nome);
 void conectarClienteAoServidor(int sockfd, struct sockaddr_in *servaddr);
-void func(int sockfd); //TESTANDO MSG DE TEXTO COM SERVIDOR
 void sendfile(FILE *fp, int sockfd);
 
 ssize_t total=0;
@@ -45,7 +41,7 @@ int main(int argc, char *argv[])
                     fprintf(stderr, "Erro: endereco de destino muito grande\n");
                     exit(EXIT_FAILURE);
                 }
-                    strcpy(serverAddress, optarg); // coloca endereco escolhido pelo usuario na string 'server'
+                strcpy(serverAddress, optarg); // coloca endereco escolhido pelo usuario na string 'server'
                 if(argv[optind] == NULL)
                 {
                     printf("Erro: argumento [ARQUIVO] nao encontrado\nEncerrando aplicacao...\n");
@@ -63,22 +59,22 @@ int main(int argc, char *argv[])
     int sockfd, connfd; 
     struct sockaddr_in servaddr, clientaddr; 
 
-    // socket create and varification
+    // Verifica e cria socket
     sockfd = criaSocket();
 
-    // assign IP, PORT 
-    servaddr = defineEndereco(serverAddress);
+    // Define Endereco e porta
+    servaddr = defineEndereco(serverAddress, 1);
 
-    // connect the client socket to server socket
+    // Tentativa de estabelecer conexao com o servidor para envio de arquivo
     //conectarClienteAoServidor(sockfd, &servaddr);
     if (connect(sockfd, (SA*)&servaddr, sizeof(servaddr)) != 0)
     { 
-        printf("connection with the server failed...\n"); 
+        printf("Conexão com o servidor falhou...\nEncerrando aplicacao...\n"); 
         exit(0); 
     } 
     else
     {
-        printf("connected to the server..\n"); 
+        printf("Conectado ao servidor!\n"); 
     }
 
     // ARQUIVO //
@@ -105,14 +101,12 @@ int main(int argc, char *argv[])
     }
 
     sendfile(fp, sockfd);
-    //puts("Send Success");
-    printf("Send Success, NumBytes = %ld\n", total);
+    printf("Envio realizado com sucesso! Numero de Bytes = %ld\n", total);
 
-
-    // function for chat 
-    //func(sockfd); 
+    // Fechando arquivo
     fclose(fp);
-    // close the socket 
+
+    // Fechando socket
     close(sockfd); 
 
     /////////////////////////////////////
@@ -160,31 +154,6 @@ void conectarClienteAoServidor(int sockfd, struct sockaddr_in *servaddr)
         printf("connected to the server..\n"); 
     }
 }
-
-void func(int sockfd) 
-{ 
-    char buff[MAX]; 
-    int n; 
-    for (;;)
-    { 
-        bzero(buff, sizeof(buff)); 
-        printf("Enter the string : "); 
-        n = 0; 
-        
-        while ((buff[n++] = getchar()) != '\n');
-
-        write(sockfd, buff, sizeof(buff)); 
-        bzero(buff, sizeof(buff)); 
-        read(sockfd, buff, sizeof(buff)); 
-        printf("From Server : %s", buff); 
-        
-        if ((strncmp(buff, "exit", 4)) == 0)
-        { 
-            printf("Client Exit...\n"); 
-            break; 
-        } 
-    } 
-} 
 
 void sendfile(FILE *fp, int sockfd) 
 {
