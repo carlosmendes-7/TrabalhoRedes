@@ -1,31 +1,21 @@
-#include <stdio.h>
-#include <stdlib.h> /*exit()*/
-#include <string.h> /*strlen()*/
-#include <errno.h> /*error handling*/
-#include <unistd.h> /*parse command-line options*/
-#include <getopt.h> /*parse command-line options*/
-#include <sys/types.h> /*stat()*/
-#include <sys/stat.h> /*stat()*/
-#include <sys/socket.h> /*socket*/
-#include <netinet/in.h> /*INET6_ADDRSTRLEN*/
 #include "socketHandler.h"
 #include "transporte.h"
 
-#define SA struct sockaddr
-#define MAX 80
-
 void func(int sockfd);
+void writefile(int sockfd, FILE *fp);
+
+ssize_t total=0;
 
 int main(int argc, char *argv[])
 {
     int sockfd, connfd, len; 
-    struct sockaddr_in servaddr, cli; 
+    struct sockaddr_in servaddr, clientaddr; 
   
     // socket create and verification 
     sockfd = criaSocket();
 
     // assign IP, PORT 
-    servaddr = defineEndereco(INADDR_ANY);
+    servaddr = defineEndereco("127.0.0.1");
 
     // Binding newly created socket to given IP and verification 
     if ((bind(sockfd, (SA*)&servaddr, sizeof(servaddr))) != 0)
@@ -49,10 +39,10 @@ int main(int argc, char *argv[])
         printf("Server listening..\n"); 
     }
 
-    len = sizeof(cli); 
+    len = sizeof(clientaddr); 
   
     // Accept the data packet from client and verification 
-    connfd = accept(sockfd, (SA*)&cli, &len); 
+    connfd = accept(sockfd, (SA*)&clientaddr, &len); 
     if (connfd < 0)
     { 
         printf("server acccept failed...\n"); 
@@ -63,8 +53,29 @@ int main(int argc, char *argv[])
         printf("server acccept the client...\n");
     }
 
+    // ARQUIVO //
+    char filename[BUFFSIZE] = {0}; 
+    if (recv(connfd, filename, BUFFSIZE, 0) == -1) 
+    {
+        perror("Can't receive filename");
+        exit(1);
+    }
+
+    FILE *fp = fopen(filename, "wb");
+    if (fp == NULL) 
+    {
+        perror("Can't open file");
+        exit(1);
+    }
+    
+    char addr[INET_ADDRSTRLEN];
+    printf("Start receive file: %s from %s\n", filename, inet_ntop(AF_INET, &clientaddr.sin_addr, addr, INET_ADDRSTRLEN));
+    writefile(connfd, fp);
+    printf("Receive Success, NumBytes = %ld\n", total);
+    fclose(fp);
+
     // Function for chatting between client and server 
-    func(connfd); 
+    //func(connfd); 
   
     // After chatting close the socket 
     close(sockfd); 
@@ -100,3 +111,25 @@ void func(int sockfd)
         } 
     } 
 } 
+
+void writefile(int sockfd, FILE *fp)
+{
+    ssize_t n;
+    char buff[MAX_LINE] = {0};
+    while ((n = recv(sockfd, buff, MAX_LINE, 0)) > 0) 
+    {
+        total+=n;
+        if (n == -1)
+        {
+            perror("Receive File Error");
+            exit(1);
+        }
+        
+        if (fwrite(buff, sizeof(char), n, fp) != n)
+        {
+            perror("Write File Error");
+            exit(1);
+        }
+        memset(buff, 0, MAX_LINE);
+    }
+}

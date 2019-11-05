@@ -1,22 +1,15 @@
-#include <stdio.h>
-#include <stdlib.h> /*exit()*/
-#include <string.h> /*strlen()*/
-#include <errno.h> /*error handling*/
-#include <unistd.h> /*parse command-line options*/
-#include <getopt.h> /*parse command-line options*/
-#include <sys/types.h> /*stat()*/
-#include <sys/stat.h> /*stat()*/
-#include <sys/socket.h> /*socket*/
-#include <netinet/in.h> /*INET6_ADDRSTRLEN*/
-#include <arpa/inet.h>
 #include "socketHandler.h"
 #include "transporte.h"
 
-#define SA struct sockaddr
-#define MAX 80
+
+
 
 void showHelp(char *nome);
+void conectarClienteAoServidor(int sockfd, struct sockaddr_in *servaddr);
 void func(int sockfd); //TESTANDO MSG DE TEXTO COM SERVIDOR
+void sendfile(FILE *fp, int sockfd);
+
+ssize_t total=0;
 
 int main(int argc, char *argv[])
 {
@@ -68,15 +61,16 @@ int main(int argc, char *argv[])
     // CRIA E CONFIGURA SOCKET CLIENTE //
 
     int sockfd, connfd; 
-    struct sockaddr_in servaddr, cli; 
+    struct sockaddr_in servaddr, clientaddr; 
 
     // socket create and varification
     sockfd = criaSocket();
 
     // assign IP, PORT 
-    servaddr = defineEndereco("127.0.0.1");
+    servaddr = defineEndereco(serverAddress);
 
-    // connect the client socket to server socket 
+    // connect the client socket to server socket
+    //conectarClienteAoServidor(sockfd, &servaddr);
     if (connect(sockfd, (SA*)&servaddr, sizeof(servaddr)) != 0)
     { 
         printf("connection with the server failed...\n"); 
@@ -87,9 +81,37 @@ int main(int argc, char *argv[])
         printf("connected to the server..\n"); 
     }
 
-    // function for chat 
-    func(sockfd); 
+    // ARQUIVO //
+    char *filename = basename(argv[3]); // abrindo argumento referente ao arquivo. precisa generalizar 
+    if (filename == NULL)
+    {
+        perror("Can't get filename");
+        exit(1);
+    }
 
+    char buff[BUFFSIZE] = {0};
+    strncpy(buff, filename, strlen(filename));
+    if (send(sockfd, buff, BUFFSIZE, 0) == -1)
+    {
+        perror("Can't send filename");
+        exit(1);
+    }
+    
+    FILE *fp = fopen(argv[3], "rb");
+    if (fp == NULL) 
+    {
+        perror("Can't open file");
+        exit(1);
+    }
+
+    sendfile(fp, sockfd);
+    //puts("Send Success");
+    printf("Send Success, NumBytes = %ld\n", total);
+
+
+    // function for chat 
+    //func(sockfd); 
+    fclose(fp);
     // close the socket 
     close(sockfd); 
 
@@ -126,6 +148,19 @@ void showHelp(char *nome)
     exit(EXIT_FAILURE);
 }
 
+void conectarClienteAoServidor(int sockfd, struct sockaddr_in *servaddr)
+{
+    if (connect(sockfd, (SA*)servaddr, sizeof(servaddr)) != 0)
+    { 
+        printf("connection with the server failed...\n"); 
+        exit(0); 
+    } 
+    else
+    {
+        printf("connected to the server..\n"); 
+    }
+}
+
 void func(int sockfd) 
 { 
     char buff[MAX]; 
@@ -150,3 +185,25 @@ void func(int sockfd)
         } 
     } 
 } 
+
+void sendfile(FILE *fp, int sockfd) 
+{
+    int n; 
+    char sendline[MAX_LINE] = {0}; 
+    while ((n = fread(sendline, sizeof(char), MAX_LINE, fp)) > 0) 
+    {
+        total+=n;
+        if (n != MAX_LINE && ferror(fp))
+        {
+            perror("Read File Error");
+            exit(1);
+        }
+        
+        if (send(sockfd, sendline, n, 0) == -1)
+        {
+            perror("Can't send file");
+            exit(1);
+        }
+        memset(sendline, 0, MAX_LINE);
+    }
+}
