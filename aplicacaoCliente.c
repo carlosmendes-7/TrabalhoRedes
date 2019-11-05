@@ -6,17 +6,17 @@
 #include <getopt.h> /*parse command-line options*/
 #include <sys/types.h> /*stat()*/
 #include <sys/stat.h> /*stat()*/
+#include <sys/socket.h> /*socket*/
 #include <netinet/in.h> /*INET6_ADDRSTRLEN*/
+#include <arpa/inet.h>
+#include "socketHandler.h"
 #include "transporte.h"
 
-void showHelp(char *nome)
-{
-	fprintf(stderr, "##### USO DE %s #####\n\n### MOSTRAR O HELPER ###\n"
-        "-h (ou --help ou --ajuda)\n\n"
-        "### ENVIAR ARQUIVOS AO ENDERECO ###\n"
-        "-s (ou --send ou --enviar) ENDERECO [ARQUIVO_1] [ARQUIVO_2] ... [ARQUIVO_N]\n", nome);
-    exit(EXIT_FAILURE);
-}
+#define SA struct sockaddr
+#define MAX 80
+
+void showHelp(char *nome);
+void func(int sockfd); //TESTANDO MSG DE TEXTO COM SERVIDOR
 
 int main(int argc, char *argv[])
 {
@@ -75,7 +75,7 @@ int main(int argc, char *argv[])
     sockfd = criaSocket();
 
     // assign IP, PORT 
-    servaddr = defineEndereco();
+    servaddr = defineEndereco("127.0.0.1");
   
     // connect the client socket to server socket 
     if (connect(sockfd, (SA*)&servaddr, sizeof(servaddr)) != 0) { 
@@ -84,7 +84,13 @@ int main(int argc, char *argv[])
     } 
     else
         printf("connected to the server..\n"); 
-
+    
+    // function for chat 
+    func(sockfd); 
+  
+    // close the socket 
+    close(sockfd); 
+    
     /////////////////////////////////////
     
 	while ( argv[optind] != NULL )
@@ -106,24 +112,32 @@ int main(int argc, char *argv[])
 	return 0;
 }
 
-int criaSocket()
+void showHelp(char *nome)
 {
-    int sockfd = socket(AF_INET,SOCK_STREAM,0);
-    if(sockfd==-1)
-    {
-        printf("socket creation failed...\n"); 
-        exit(0); 
-    }
-    printf("Socket successfully created..\n");  
-    return sockfd;
+    fprintf(stderr, "##### USO DE %s #####\n\n### MOSTRAR O HELPER ###\n"
+        "-h (ou --help ou --ajuda)\n\n"
+        "### ENVIAR ARQUIVOS AO ENDERECO ###\n"
+        "-s (ou --send ou --enviar) ENDERECO [ARQUIVO_1] [ARQUIVO_2] ... [ARQUIVO_N]\n", nome);
+    exit(EXIT_FAILURE);
 }
 
-sockaddr_in defineEndereco()
-{
-    sockaddr_in servidorTemp;
-    bzero(&servidorTemp, sizeof(servidorTemp));
-    servidorTemp.sin_family = AF_INET;
-    servidorTemp.sin_addr.s_addr = htonl("127.0.0.1");
-    servidorTemp.sin_port = htons(PORT);
-    return servidorTemp;
-}
+void func(int sockfd) 
+{ 
+    char buff[MAX]; 
+    int n; 
+    for (;;) { 
+        bzero(buff, sizeof(buff)); 
+        printf("Enter the string : "); 
+        n = 0; 
+        while ((buff[n++] = getchar()) != '\n') 
+            ; 
+        write(sockfd, buff, sizeof(buff)); 
+        bzero(buff, sizeof(buff)); 
+        read(sockfd, buff, sizeof(buff)); 
+        printf("From Server : %s", buff); 
+        if ((strncmp(buff, "exit", 4)) == 0) { 
+            printf("Client Exit...\n"); 
+            break; 
+        } 
+    } 
+} 
