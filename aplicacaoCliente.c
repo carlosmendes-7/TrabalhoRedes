@@ -1,3 +1,11 @@
+/*TODO
+deixar server aberto
+dissociar camada de aplicacao da app
+procurar lib para segmentacao
+multiplos clientes
+interface gráfica
+*/
+
 #include "socketHandler.h"
 #include "transporte.h"
 
@@ -133,7 +141,7 @@ void showHelp(char *nome)
     fprintf(stderr, "##### USO DE %s #####\n\n### MOSTRAR O HELPER ###\n"
         "-h (ou --help ou --ajuda)\n\n"
         "### ENVIAR ARQUIVOS AO ENDERECO ###\n"
-        "-s (ou --send ou --enviar) ENDERECO [ARQUIVO_1] [ARQUIVO_2] ... [ARQUIVO_N]\n", nome);
+        "-s (ou --send ou --enviar) ENDERECO NOMEDOARQUIVO\n", nome);
     exit(EXIT_FAILURE);
 }
 
