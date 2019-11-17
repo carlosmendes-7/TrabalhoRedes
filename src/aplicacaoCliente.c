@@ -6,8 +6,8 @@ multiplos clientes
 interface gráfica
 */
 
-#include "socketHandler.h"
-#include "transporte.h"
+#include "../include/socketHandler.h"
+#include "../include/transporte.h"
 
 void showHelp(char *nome);
 void conectarClienteAoServidor(int sockfd, struct sockaddr_in *servaddr);

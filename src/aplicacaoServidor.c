@@ -1,5 +1,5 @@
-#include "socketHandler.h"
-#include "transporte.h"
+#include "../include/socketHandler.h"
+#include "../include/transporte.h"
 
 void receberArquivo(int sockfd, FILE *fp);
 void bindarSocket(int sockfd, struct sockaddr_in *servaddr);
@@ -59,7 +59,9 @@ int main(int argc, char *argv[])
     fclose(fp);
   
     // Fechando socket 
-    close(sockfd); 
+    close(sockfd);
+//
+
 }
 
 void receberArquivo(int sockfd, FILE *fp)
