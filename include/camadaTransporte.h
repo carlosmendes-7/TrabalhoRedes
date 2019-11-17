@@ -1,5 +1,5 @@
-#ifndef TRANSPORTE_H_
-#define TRANSPORTE_H_
+#ifndef CAMADATRANSPORTE_H_
+#define CAMADATRANSPORTE_H_
 
 #include <stdio.h>
 #include <stdlib.h> /*exit()*/

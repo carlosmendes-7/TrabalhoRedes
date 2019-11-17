@@ -7,10 +7,11 @@ interface gráfica
 */
 
 #include "../include/socketHandler.h"
-#include "../include/transporte.h"
+#include "../include/camadaTransporte.h"
+#include "../include/camadaAplicacao.h"
 
 void showHelp(char *nome);
-void conectarClienteAoServidor(int sockfd, struct sockaddr_in *servaddr);
+//void conectarClienteAoServidor(int sockfd, struct sockaddr_in *servaddr);
 void enviarArquivo(FILE *fp, int sockfd);
 
 ssize_t total=0;
@@ -145,7 +146,7 @@ void showHelp(char *nome)
     exit(EXIT_FAILURE);
 }
 
-void conectarClienteAoServidor(int sockfd, struct sockaddr_in *servaddr)
+/*void conectarClienteAoServidor(int sockfd, struct sockaddr_in *servaddr)
 {
     if (connect(sockfd, (SA*)&(*servaddr), sizeof((*servaddr))) != 0)
     { 
@@ -156,7 +157,7 @@ void conectarClienteAoServidor(int sockfd, struct sockaddr_in *servaddr)
     {
         printf("Conectado ao servidor!\n");
     }
-}
+}*/
 
 void enviarArquivo(FILE *fp, int sockfd) 
 {

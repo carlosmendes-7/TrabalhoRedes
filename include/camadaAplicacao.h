@@ -1,5 +1,5 @@
-#ifndef TRANSPORTE_H_
-#define TRANSPORTE_H_
+#ifndef CAMADAAPLICACAO_H_
+#define CAMADAAPLICACAO_H_
 
 #include <stdio.h>
 #include <stdlib.h> /*exit()*/
@@ -21,6 +21,7 @@
 #define SA struct sockaddr
 #define MAX 80
 
-//int enviarArquivo(char * nome, char * destino, blkcnt_t nblocks);
+void conectarClienteAoServidor(int sockfd, struct sockaddr_in *servaddr);
+void verificaConexao(int connfd);
 
 #endif

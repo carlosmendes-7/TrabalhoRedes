@@ -1,10 +1,11 @@
 #include "../include/socketHandler.h"
-#include "../include/transporte.h"
+#include "../include/camadaTransporte.h"
+#include "../include/camadaAplicacao.h"
 
 void receberArquivo(int sockfd, FILE *fp);
 void bindarSocket(int sockfd, struct sockaddr_in *servaddr);
 void listenSocket(int sockfd);
-void verificaConexao(int connfd);
+//void verificaConexao(int connfd);
 
 ssize_t total=0;
 
@@ -112,7 +113,7 @@ void listenSocket(int sockfd)
     }
 }
 
-void verificaConexao(int connfd)
+/*void verificaConexao(int connfd)
 {
     if (connfd < 0)
     { 
@@ -123,4 +124,4 @@ void verificaConexao(int connfd)
     {
         printf("Conexao entre servidor e cliente realizada com sucesso!\n");
     }
-}
+}*/
