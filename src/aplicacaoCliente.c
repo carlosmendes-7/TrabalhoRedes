@@ -52,11 +52,6 @@ int main(int argc, char *argv[])
                     exit(EXIT_FAILURE);
                 }
                 strcpy(serverAddress, optarg); // coloca endereco escolhido pelo usuario na string 'serverAddress'
-                if(argv[optind] == NULL)
-                {
-                    printf("Erro: argumento [ARQUIVO] nao encontrado\nEncerrando aplicacao...\n");
-                    exit(EXIT_FAILURE);
-                }
                 break;
             default:
                 fprintf(stderr, "Erro: opcao invalida ou faltando argumento: '%c'\n", optopt);
@@ -79,9 +74,11 @@ int main(int argc, char *argv[])
     conectarClienteAoServidor(sockfd, &servaddr);
 
     ////////// Acoes referentes ao Arquivo //////////
-
-    char *filename = basename(argv[3]); // nome do arquivo dado pelo usuário
-    FILE *fp = fopen(argv[3], "rb"); // tentativa de abrir o arquivo  
+    char inputFilePath[256];
+    printf("Digite o path e nome do arquivo que deseja enviar: ");
+    scanf("%s", inputFilePath);
+    char *filename = basename(inputFilePath); // nome do arquivo dado pelo usuário
+    FILE *fp = fopen(inputFilePath, "rb"); // tentativa de abrir o arquivo  
     char buff[BUFFSIZE] = {0};
 
     verificaArquivo(sockfd, fp, buff, BUFFSIZE, filename); // Verifica se Arquivo Existe e envia Path para o socket
@@ -94,27 +91,6 @@ int main(int argc, char *argv[])
     // Fechando socket
     close(sockfd); 
 
-    /////////////////////////////////////
-
-    while ( argv[optind] != NULL )
-    {
-        struct stat s ;
-        if ( stat(argv[optind], &s) == -1 )
-        {
-            printf("Erro em arquivo \"%s\": %s\n", argv[optind], strerror(errno));
-            ++optind;
-            continue;
-        }
-        if( /*enviarArquivo(argv[optind], serverAddress, s.st_blocks)*/ 1 )
-        {
-           printf("Arquivo \"%s\" transmitido com sucesso!\n", argv[optind]);
-        }
-        else
-        {
-           fprintf(stderr, "Erro: falha na transmissao do arquivo \"%s\"\n", argv[optind]);
-        }
-        ++optind;
-    }
     return 0;
 }
 

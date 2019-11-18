@@ -30,3 +30,29 @@ struct sockaddr_in defineEndereco(char address[], int x)
 
 	return servidorTemp;
 }
+
+void bindarSocket(int sockfd, struct sockaddr_in *servaddr)
+{
+    if (bind(sockfd, (SA*)&(*servaddr), sizeof((*servaddr))) != 0)
+    { 
+        printf("Erro! Falha no bind.\nEncerrando a aplicacao...\n"); 
+        exit(0); 
+    } 
+    else
+    {
+        printf("Bind realizado com sucesso!\n"); 
+    }
+}
+
+void listenSocket(int sockfd)
+{
+    if ((listen(sockfd, 5)) != 0)
+    { 
+        printf("Erro! Falha no listen.\nEncerrando a aplicacao...\n"); 
+        exit(0); 
+    } 
+    else
+    {
+        printf("Listen realizado com sucesso!\n"); 
+    }
+}

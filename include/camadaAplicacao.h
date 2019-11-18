@@ -20,6 +20,7 @@
 #define BUFFSIZE 4096
 #define SA struct sockaddr
 #define MAX 80
+#define TAMANHO_SEGMENTO 8
 
 // USO CLIENTE //
 void conectarClienteAoServidor(int sockfd, struct sockaddr_in *servaddr);
@@ -28,5 +29,7 @@ void enviarArquivo(FILE *fp, int sockfd, ssize_t *total);
 
 // USO SERVIDOR //
 void verificaConexao(int connfd);
+void verificaArquivoCliente(int connfd, int buff_size, char *filename);
+void receberArquivo(int sockfd, FILE *fp, ssize_t *total);
 
 #endif
