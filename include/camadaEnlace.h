@@ -1,5 +1,5 @@
-#ifndef CAMADATRANSPORTE_H_
-#define CAMADATRANSPORTE_H_
+#ifndef CAMADAENLACE_H_
+#define CAMADAENLACE_H_
 
 #include <stdio.h>
 #include <stdlib.h> /*exit()*/
@@ -16,7 +16,5 @@
 #define PORT 19567
 #define MAX 80
 #define SA struct sockaddr
-
-void enviaSegmento(int sockfd, FILE *fp, char *sendline, int n, int contSegmento, int maxLine, ssize_t *total);
 
 #endif

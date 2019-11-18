@@ -1,5 +1,5 @@
 #include "../include/camadaAplicacao.h"
-
+#include "../include/camadaTransporte.h"
 
 // USO CLIENTE //
 
@@ -33,23 +33,14 @@ void verificaArquivo(int sockfd, FILE *fp, char *buff, int buff_size, char *file
 
 void enviarArquivo(FILE *fp, int sockfd, ssize_t *total)
 {
+    int contSegmento=1;
     int n; 
     char sendline[MAX_LINE] = {0}; 
     while ((n = fread(sendline, sizeof(char), TAMANHO_SEGMENTO, fp)) > 0) 
     {
-        *total+=n;
-        if (n != MAX_LINE && ferror(fp))
-        {
-            perror("Read File Error");
-            exit(1);
-        }
-        
-        if (send(sockfd, sendline, n, 0) == -1)
-        {
-            perror("Can't send file");
-            exit(1);
-        }
-        memset(sendline, 0, MAX_LINE);
+
+        enviaSegmento(sockfd, fp, sendline, n, contSegmento, MAX_LINE, total); // ENVIA SEGMENTO PARA CAMADA DE TRANSPORTE
+        contSegmento++;
     }
     printf("Envio realizado com sucesso! Numero de Bytes = %ld\n", *total);
 }

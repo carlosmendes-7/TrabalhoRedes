@@ -1,7 +1,5 @@
 /*TODO
 deixar server aberto
-dissociar camada de aplicacao da app
-procurar lib para segmentacao
 multiplos clientes
 interface gráfica
 */
