@@ -21,7 +21,12 @@
 #define SA struct sockaddr
 #define MAX 80
 
+// USO CLIENTE //
 void conectarClienteAoServidor(int sockfd, struct sockaddr_in *servaddr);
+void verificaArquivo(int sockfd, FILE *fp, char *buff, int buff_size, char *filename);
+void enviarArquivo(FILE *fp, int sockfd, ssize_t *total);
+
+// USO SERVIDOR //
 void verificaConexao(int connfd);
 
 #endif

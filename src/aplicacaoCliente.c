@@ -11,8 +11,6 @@ interface gráfica
 #include "../include/camadaAplicacao.h"
 
 void showHelp(char *nome);
-//void conectarClienteAoServidor(int sockfd, struct sockaddr_in *servaddr);
-void enviarArquivo(FILE *fp, int sockfd);
 
 ssize_t total=0;
 
@@ -77,35 +75,18 @@ int main(int argc, char *argv[])
     // Define Endereco e porta
     servaddr = defineEndereco(serverAddress, 1);
 
-    // Tentativa de estabelecer conexao com o servidor para envio de arquivo
+    // Tentativa de estabelecer conexao com o servidor para envio de arquivo [CAMADA DE APLICACAO]
     conectarClienteAoServidor(sockfd, &servaddr);
 
     ////////// Acoes referentes ao Arquivo //////////
 
-    char *filename = basename(argv[3]); // abrindo argumento referente ao arquivo. precisa generalizar 
-    if (filename == NULL)
-    {
-        perror("Can't get filename");
-        exit(1);
-    }
-
+    char *filename = basename(argv[3]); // nome do arquivo dado pelo usuário
+    FILE *fp = fopen(argv[3], "rb"); // tentativa de abrir o arquivo  
     char buff[BUFFSIZE] = {0};
-    strncpy(buff, filename, strlen(filename));
-    if (send(sockfd, buff, BUFFSIZE, 0) == -1)
-    {
-        perror("Erro! Nao foi possivel enviar o arquivo. Encerrando aplicacao...\n");
-        exit(1);
-    }
-    
-    FILE *fp = fopen(argv[3], "rb");
-    if (fp == NULL) 
-    {
-        perror("Erro! Nao foi possivel abrir o arquivo. Encerrando aplicacao...\n");
-        exit(1);
-    }
 
-    enviarArquivo(fp, sockfd);
-    printf("Envio realizado com sucesso! Numero de Bytes = %ld\n", total);
+    verificaArquivo(sockfd, fp, buff, BUFFSIZE, filename); // Verifica se Arquivo Existe e envia Path para o socket
+
+    enviarArquivo(fp, sockfd, &total);
 
     // Fechando arquivo
     fclose(fp);
@@ -144,39 +125,4 @@ void showHelp(char *nome)
         "### ENVIAR ARQUIVOS AO ENDERECO ###\n"
         "-s (ou --send ou --enviar) ENDERECO NOMEDOARQUIVO\n", nome);
     exit(EXIT_FAILURE);
-}
-
-/*void conectarClienteAoServidor(int sockfd, struct sockaddr_in *servaddr)
-{
-    if (connect(sockfd, (SA*)&(*servaddr), sizeof((*servaddr))) != 0)
-    { 
-        printf("Conexão com o servidor falhou...\nEncerrando aplicacao...\n"); 
-        exit(0); 
-    } 
-    else
-    {
-        printf("Conectado ao servidor!\n");
-    }
-}*/
-
-void enviarArquivo(FILE *fp, int sockfd) 
-{
-    int n; 
-    char sendline[MAX_LINE] = {0}; 
-    while ((n = fread(sendline, sizeof(char), MAX_LINE, fp)) > 0) 
-    {
-        total+=n;
-        if (n != MAX_LINE && ferror(fp))
-        {
-            perror("Read File Error");
-            exit(1);
-        }
-        
-        if (send(sockfd, sendline, n, 0) == -1)
-        {
-            perror("Can't send file");
-            exit(1);
-        }
-        memset(sendline, 0, MAX_LINE);
-    }
 }

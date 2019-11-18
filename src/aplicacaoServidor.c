@@ -31,7 +31,7 @@ int main(int argc, char *argv[])
 
     clientAddrLength = sizeof(clientaddr); 
   
-    // Tentativa de estabelecer conexao entre cliente-servidor (aceitar solicitacao do cliente)
+    // Tentativa de estabelecer conexao entre cliente-servidor (aceitar solicitacao do cliente) [CAMADA DE APLICACAO]
     connfd = accept(sockfd, (SA*)&clientaddr, &clientAddrLength);
     verificaConexao(connfd);
 
@@ -40,7 +40,7 @@ int main(int argc, char *argv[])
     char filename[BUFFSIZE] = {0}; 
     if (recv(connfd, filename, BUFFSIZE, 0) == -1) 
     {
-        perror("Erro! Nao foi possivel receber o arquivo. Encerrando aplicacao...\n");
+        perror("Erro! Nao foi possivel receber o path do arquivo. Encerrando aplicacao...\n");
         exit(1);
     }
 
