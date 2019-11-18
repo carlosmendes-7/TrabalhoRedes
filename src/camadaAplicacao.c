@@ -1,5 +1,6 @@
 #include "../include/camadaAplicacao.h"
 #include "../include/camadaTransporte.h"
+#include "../include/camadaRede.h"
 
 // USO CLIENTE //
 
@@ -31,7 +32,7 @@ void verificaArquivo(int sockfd, FILE *fp, char *buff, int buff_size, char *file
     } 
 }
 
-void enviarArquivo(FILE *fp, int sockfd, ssize_t *total)
+void enviarArquivo(FILE *fp, int sockfd, ssize_t *total, IPs ips)
 {
     int contSegmento=1;
     int n; 
@@ -39,7 +40,7 @@ void enviarArquivo(FILE *fp, int sockfd, ssize_t *total)
     while ((n = fread(sendline, sizeof(char), TAMANHO_SEGMENTO, fp)) > 0) 
     {
 
-        enviaSegmento(sockfd, fp, sendline, n, contSegmento, MAX_LINE, total); // ENVIA SEGMENTO PARA CAMADA DE TRANSPORTE
+        enviaSegmento(sockfd, fp, sendline, n, contSegmento, MAX_LINE, total, ips); // ENVIA SEGMENTO PARA CAMADA DE TRANSPORTE
         contSegmento++;
     }
     printf("Envio realizado com sucesso! Numero de Bytes = %ld\n", *total);

@@ -22,10 +22,15 @@
 #define MAX 80
 #define TAMANHO_SEGMENTO 8
 
+typedef struct IPs {
+	char *ipCliente;
+	char *ipServidor;
+} IPs;
+
 // USO CLIENTE //
 void conectarClienteAoServidor(int sockfd, struct sockaddr_in *servaddr);
 void verificaArquivo(int sockfd, FILE *fp, char *buff, int buff_size, char *filename);
-void enviarArquivo(FILE *fp, int sockfd, ssize_t *total);
+void enviarArquivo(FILE *fp, int sockfd, ssize_t *total, IPs ips);
 
 // USO SERVIDOR //
 void verificaConexao(int connfd);

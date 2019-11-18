@@ -13,8 +13,9 @@
 
 #include <arpa/inet.h> // Somente no Cliente 
 
-#define PORT 19567
-#define MAX 80
-#define SA struct sockaddr
+#include "../include/camadaTransporte.h"
+#include "../include/camadaAplicacao.h"
+
+void enviaDatagrama(int sockfd, FILE *fp, char *sendline, int n, int maxLine, ssize_t *total, Transporte transporte, IPs ips);
 
 #endif

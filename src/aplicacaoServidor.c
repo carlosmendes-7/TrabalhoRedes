@@ -1,6 +1,6 @@
 #include "../include/socketHandler.h"
-#include "../include/camadaTransporte.h"
 #include "../include/camadaAplicacao.h"
+
 
 ssize_t total=0;
 
@@ -30,6 +30,7 @@ int main(int argc, char *argv[])
     connfd = accept(sockfd, (SA*)&clientaddr, &clientAddrLength);
     verificaConexao(connfd);
 
+    printf("IP CLIENTE: %s\nIP SERVIDOR: %s\n", inet_ntoa(clientaddr.sin_addr), inet_ntoa(servaddr.sin_addr));
     ////////// Acoes referentes ao Arquivo //////////
 
     char filename[BUFFSIZE] = {0}; 

@@ -13,10 +13,18 @@
 
 #include <arpa/inet.h> // Somente no Cliente 
 
+#include "../include/camadaAplicacao.h"
+
 #define PORT 19567
 #define MAX 80
 #define SA struct sockaddr
 
-void enviaSegmento(int sockfd, FILE *fp, char *sendline, int n, int contSegmento, int maxLine, ssize_t *total);
+typedef struct Transporte {
+	int identificadorSegmento;
+	int checksumSegmento;
+} Transporte;
+
+
+void enviaSegmento(int sockfd, FILE *fp, char *sendline, int n, int contSegmento, int maxLine, ssize_t *total, IPs ips);
 
 #endif

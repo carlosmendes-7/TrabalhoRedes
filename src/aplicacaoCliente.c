@@ -5,7 +5,6 @@ interface gráfica
 */
 
 #include "../include/socketHandler.h"
-#include "../include/camadaTransporte.h"
 #include "../include/camadaAplicacao.h"
 
 void showHelp(char *nome);
@@ -80,8 +79,11 @@ int main(int argc, char *argv[])
     char buff[BUFFSIZE] = {0};
 
     verificaArquivo(sockfd, fp, buff, BUFFSIZE, filename); // Verifica se Arquivo Existe e envia Path para o socket
-
-    enviarArquivo(fp, sockfd, &total);
+    
+    IPs ips;
+    ips.ipCliente = "127.0.0.1";
+    ips.ipServidor = serverAddress;
+    enviarArquivo(fp, sockfd, &total, ips);
 
     // Fechando arquivo
     fclose(fp);

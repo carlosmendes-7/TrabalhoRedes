@@ -1,21 +1,16 @@
 #include "../include/camadaTransporte.h"
+#include "../include/camadaRede.h"
+#include "../include/camadaAplicacao.h"
 
-void enviaSegmento(int sockfd, FILE *fp, char *sendline, int n, int contSegmento, int maxLine, ssize_t *total)
+void enviaSegmento(int sockfd, FILE *fp, char *sendline, int n, int contSegmento, int maxLine, ssize_t *total, IPs ips)
 {
-	int identificacaoSegmento = contSegmento;
-	int cheksum = identificacaoSegmento*2;
-	*total+=n;
-    if (n != maxLine && ferror(fp))
-    {
-        perror("Read File Error");
-        exit(1);
-    }
-    
-    if (send(sockfd, sendline, n, 0) == -1)
-    {
-        perror("Can't send file");
-        exit(1);
-    }
-    memset(sendline, 0, maxLine);
- 	printf("ID SEGMENTO: %d\tCHEKSUM: %d\n", identificacaoSegmento, cheksum);
+	Transporte transporte;
+	transporte.identificadorSegmento = contSegmento;
+	transporte.checksumSegmento = transporte.identificadorSegmento*2;
+
+	enviaDatagrama(sockfd, fp, sendline, n, maxLine, total, transporte, ips);
+
+	//printf("IP CLIENTE: %s\tIP SERVIDOR: %s\n", ips.ipCliente, ips.ipServidor);
+ 	//printf("ID SEGMENTO: %d\tCHEKSUM: %d\n", identificacaoSegmento, cheksum);
+ 	//printf("IP CLIENTE: %s\tIP SERVIDOR: %s\n", ipCliente, ipServidor);
 }
