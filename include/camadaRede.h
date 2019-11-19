@@ -16,6 +16,11 @@
 #include "../include/camadaTransporte.h"
 #include "../include/camadaAplicacao.h"
 
+typedef struct Rede {
+	Transporte transporte;
+	IPs ips;
+} Rede;
+
 void enviaDatagrama(int sockfd, FILE *fp, char *sendline, int n, int maxLine, ssize_t *total, Transporte transporte, IPs ips);
 
 #endif
