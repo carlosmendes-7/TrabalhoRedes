@@ -5,6 +5,11 @@
 
 void enviaQuadro(int sockfd, FILE *fp, char *sendline, int n, int maxLine, ssize_t *total, Rede rede)
 {
+    Enlace enlace;
+    enlace.rede = rede;
+    enlace.macOrigem = "";
+    enlace.macDestino = "";
+    
 	*total+=n;
 	if (n != maxLine && ferror(fp))
     {

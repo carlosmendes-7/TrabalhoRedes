@@ -16,6 +16,12 @@
 #include "../include/camadaTransporte.h"
 #include "../include/camadaRede.h"
 
+typedef struct Enlace {
+	Rede rede;
+	char *macOrigem;
+	char *macDestino;
+} Enlace;
+
 void enviaQuadro(int sockfd, FILE *fp, char *sendline, int n, int maxLine, ssize_t *total, Rede rede);
 
 #endif
