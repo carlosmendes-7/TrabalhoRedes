@@ -15,10 +15,6 @@
 
 #include "../include/camadaAplicacao.h"
 
-#define PORT 19567
-#define MAX 80
-#define SA struct sockaddr
-
 typedef struct Transporte {
 	int identificadorSegmento;
 	int checksumSegmento;

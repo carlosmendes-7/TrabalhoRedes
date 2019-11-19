@@ -13,7 +13,7 @@ int criaSocket()
 	return sockfd;
 }
 
-struct sockaddr_in defineEndereco(char address[], int x)
+struct sockaddr_in defineEndereco(char *address, int x)
 {
 	struct sockaddr_in servidorTemp;
 	bzero(&servidorTemp, sizeof(servidorTemp));
@@ -21,7 +21,7 @@ struct sockaddr_in defineEndereco(char address[], int x)
 	servidorTemp.sin_port = htons(PORT);
 	if(x==1)
 	{
-		servidorTemp.sin_addr.s_addr = inet_addr(address); 	
+		servidorTemp.sin_addr.s_addr = inet_addr("127.0.0.1"); // era address
 	}
 	else
 	{

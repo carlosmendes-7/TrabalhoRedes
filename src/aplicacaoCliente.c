@@ -6,6 +6,7 @@ interface gráfica
 
 #include "../include/socketHandler.h"
 #include "../include/camadaAplicacao.h"
+#include "../include/camadaTransporte.h"
 
 void showHelp(char *nome);
 
@@ -67,6 +68,7 @@ int main(int argc, char *argv[])
     // Define Endereco e porta
     servaddr = defineEndereco(serverAddress, 1);
 
+    printf("%s\n", serverAddress);
     // Tentativa de estabelecer conexao com o servidor para envio de arquivo [CAMADA DE APLICACAO]
     conectarClienteAoServidor(sockfd, &servaddr);
 
