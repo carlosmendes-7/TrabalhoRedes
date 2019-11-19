@@ -8,4 +8,4 @@ make -f makefileClient.make
 
 EXECUTAR
 ./bin/server
-./bin/client -s 127.0.1.1 ./bin/files-to-send/text.txt
+./bin/client -s 127.0.0.1 ./bin/files-to-send/text.txt
