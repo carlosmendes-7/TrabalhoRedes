@@ -1,4 +1,4 @@
-/*#include "../include/camadaEnlace.h"
+#include "../include/camadaEnlace.h"
 #include "../include/camadaTransporte.h"
 #include "../include/camadaAplicacao.h"
 #include "../include/camadaRede.h"
@@ -18,4 +18,4 @@ void enviaQuadro(int sockfd, FILE *fp, char *sendline, int n, int maxLine, ssize
         exit(1);
     }
     memset(sendline, 0, maxLine);
-}*/
+}
