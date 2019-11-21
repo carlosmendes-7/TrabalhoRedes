@@ -6,7 +6,7 @@ DEPS = ./include/camadaAplicacao.h ./include/camadaTransporte.h ./include/camada
 	$(CC) -c -o $@ $< $(CFLAGS)
 
 aplicacaoCliente: ./src/aplicacaoCliente.o ./src/camadaAplicacao.o ./src/camadaTransporte.o ./src/camadaRede.o ./src/camadaEnlace.o ./src/socketHandler.o
-	$(CC) -o ./bin/client ./src/aplicacaoCliente.o ./src/camadaAplicacao.o ./src/camadaTransporte.o ./src/camadaRede.o ./src/camadaEnlace.o ./src/socketHandler.o
+	$(CC) -o ./bin/client $^
 	@ echo [CLEAN] Excluindo Objetos Criados...
 	@ rm -f ./src/*.o
 	@ echo [DONE] Exclusao realizada com sucesso!
