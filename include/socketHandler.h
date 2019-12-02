@@ -1,3 +1,10 @@
+/*Equipe:
+ * Carlos Frederico D'Almeida e Mendes
+ * Danilo de Andrade Peleteiro
+ *
+ *
+ *
+ */
 #ifndef SOCKETHANDLER_H_
 #define SOCKETHANDLER_H_
 

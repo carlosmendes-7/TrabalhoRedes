@@ -1,3 +1,10 @@
+#Equipe:
+# Carlos Frederico D'Almeida e Mendes
+# Danilo de Andrade Peleteiro
+#
+#
+#
+
 CC=gcc
 CFLAGS=-I.
 DEPS = ./include/camadaAplicacao.h ./include/camadaTransporte.h ./include/camadaRede.h ./include/camadaEnlace.h ./include/socketHandler.h

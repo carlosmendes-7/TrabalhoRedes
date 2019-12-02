@@ -1,3 +1,10 @@
+/*Equipe:
+ * Carlos Frederico D'Almeida e Mendes
+ * Danilo de Andrade Peleteiro
+ *
+ *
+ *
+ */
 #ifndef CAMADAREDE_H_
 #define CAMADAREDE_H_
 
