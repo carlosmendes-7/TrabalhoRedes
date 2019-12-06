@@ -1,7 +1,15 @@
+/*Equipe:
+ * Carlos Frederico D'Almeida e Mendes
+ * Danilo de Andrade Peleteiro
+ *
+ *
+ *
+ */
+
 /*TODO
 deixar server aberto
 multiplos clientes
-interface gráfica
+interface grafica(?)
 */
 
 #include "../include/socketHandler.h"

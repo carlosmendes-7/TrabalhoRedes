@@ -1,3 +1,10 @@
+/*Equipe:
+ * Carlos Frederico D'Almeida e Mendes
+ * Danilo de Andrade Peleteiro
+ *
+ *
+ *
+ */
 #ifndef CAMADAAPLICACAO_H_
 #define CAMADAAPLICACAO_H_
 

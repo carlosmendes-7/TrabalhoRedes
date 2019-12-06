@@ -1,3 +1,10 @@
+/*Equipe:
+ * Carlos Frederico D'Almeida e Mendes
+ * Danilo de Andrade Peleteiro
+ *
+ *
+ *
+ */
 #include "../include/camadaRede.h"
 #include "../include/camadaTransporte.h"
 #include "../include/camadaAplicacao.h"

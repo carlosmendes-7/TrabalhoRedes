@@ -1,3 +1,10 @@
+/*Equipe:
+ * Carlos Frederico D'Almeida e Mendes
+ * Danilo de Andrade Peleteiro
+ *
+ *
+ *
+ */
 #include "../include/camadaEnlace.h"
 #include "../include/camadaTransporte.h"
 #include "../include/camadaAplicacao.h"
@@ -25,6 +32,7 @@ void enviaQuadro(int sockfd, FILE *fp, char *sendline, int n, int maxLine, ssize
         exit(1);
     }
     memset(sendline, 0, maxLine);
+<<<<<<< HEAD
     enlaceTestado = enlace;
 }
 
@@ -32,3 +40,6 @@ void verificaQuadro()
 {
     printf("%d\n", enlaceTestado.rede.transporte.identificadorSegmento);
 }
+=======
+}
+>>>>>>> f4aed2585cf3d9a55362d508d148137e7d951ad7
