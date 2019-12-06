@@ -23,5 +23,6 @@ typedef struct Enlace {
 } Enlace;
 
 void enviaQuadro(int sockfd, FILE *fp, char *sendline, int n, int maxLine, ssize_t *total, Rede rede);
+void verificaQuadro();
 
 #endif

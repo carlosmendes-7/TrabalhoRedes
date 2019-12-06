@@ -3,6 +3,8 @@
 #include "../include/camadaAplicacao.h"
 #include "../include/camadaRede.h"
 
+Enlace enlaceTestado;
+
 void enviaQuadro(int sockfd, FILE *fp, char *sendline, int n, int maxLine, ssize_t *total, Rede rede)
 {
     Enlace enlace;
@@ -23,4 +25,10 @@ void enviaQuadro(int sockfd, FILE *fp, char *sendline, int n, int maxLine, ssize
         exit(1);
     }
     memset(sendline, 0, maxLine);
+    enlaceTestado = enlace;
+}
+
+void verificaQuadro()
+{
+    printf("%d\n", enlaceTestado.rede.transporte.identificadorSegmento);
 }
