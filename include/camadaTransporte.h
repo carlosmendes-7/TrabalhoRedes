@@ -1,10 +1,12 @@
 /*Equipe:
+ * Antonio Carlos Couto Oliveira
+ * Caique de Souza Silva
  * Carlos Frederico D'Almeida e Mendes
  * Danilo de Andrade Peleteiro
- *
- *
- *
+ * Rafael Barretto Serejo Farias
+ * Vinicius Aragao Nascimento
  */
+
 #ifndef CAMADATRANSPORTE_H_
 #define CAMADATRANSPORTE_H_
 

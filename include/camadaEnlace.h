@@ -1,10 +1,12 @@
 /*Equipe:
+ * Antonio Carlos Couto Oliveira
+ * Caique de Souza Silva
  * Carlos Frederico D'Almeida e Mendes
  * Danilo de Andrade Peleteiro
- *
- *
- *
+ * Rafael Barretto Serejo Farias
+ * Vinicius Aragao Nascimento
  */
+
 #ifndef CAMADAENLACE_H_
 #define CAMADAENLACE_H_
 
@@ -30,6 +32,6 @@ typedef struct Enlace {
 } Enlace;
 
 void enviaQuadro(int sockfd, FILE *fp, char *sendline, int n, int maxLine, ssize_t *total, Rede rede);
-void verificaQuadro();
+//void verificaQuadro();
 
 #endif

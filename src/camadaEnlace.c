@@ -1,23 +1,25 @@
 /*Equipe:
+ * Antonio Carlos Couto Oliveira
+ * Caique de Souza Silva
  * Carlos Frederico D'Almeida e Mendes
  * Danilo de Andrade Peleteiro
- *
- *
- *
+ * Rafael Barretto Serejo Farias
+ * Vinicius Aragao Nascimento
  */
+
 #include "../include/camadaEnlace.h"
 #include "../include/camadaTransporte.h"
 #include "../include/camadaAplicacao.h"
 #include "../include/camadaRede.h"
 
-Enlace enlaceTestado;
+//Enlace enlaceTestado;
 
 void enviaQuadro(int sockfd, FILE *fp, char *sendline, int n, int maxLine, ssize_t *total, Rede rede)
 {
     Enlace enlace;
     enlace.rede = rede;
-    enlace.macOrigem = "";
-    enlace.macDestino = "";
+    enlace.macOrigem = "8E:2A:9F";
+    enlace.macDestino = "8E:2A:9F";
     
 	*total+=n;
 	if (n != maxLine && ferror(fp))
@@ -32,14 +34,14 @@ void enviaQuadro(int sockfd, FILE *fp, char *sendline, int n, int maxLine, ssize
         exit(1);
     }
     memset(sendline, 0, maxLine);
-<<<<<<< HEAD
-    enlaceTestado = enlace;
+
+    printf("[CAMADA DE ENLACE]\n");
+    printf("MAC ORIGEM: %s\nMAC DESTINO: %s\n", enlace.macOrigem, enlace.macDestino);
+
+    //enlaceTestado = enlace;
 }
 
-void verificaQuadro()
+/*void verificaQuadro()
 {
     printf("%d\n", enlaceTestado.rede.transporte.identificadorSegmento);
-}
-=======
-}
->>>>>>> f4aed2585cf3d9a55362d508d148137e7d951ad7
+}*/

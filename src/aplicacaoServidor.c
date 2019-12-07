@@ -1,11 +1,12 @@
 /*Equipe:
+ * Antonio Carlos Couto Oliveira
+ * Caique de Souza Silva
  * Carlos Frederico D'Almeida e Mendes
  * Danilo de Andrade Peleteiro
- *
- *
- *
+ * Rafael Barretto Serejo Farias
+ * Vinicius Aragao Nascimento
  */
-#include "../include/socketHandler.h"
+
 #include "../include/camadaAplicacao.h"
 
 
@@ -37,7 +38,7 @@ int main(int argc, char *argv[])
     connfd = accept(sockfd, (SA*)&clientaddr, &clientAddrLength);
     verificaConexao(connfd);
 
-    printf("IP CLIENTE: %s\nIP SERVIDOR: %s\n", inet_ntoa(clientaddr.sin_addr), inet_ntoa(servaddr.sin_addr));
+    //printf("IP CLIENTE: %s\nIP SERVIDOR: %s\n", inet_ntoa(clientaddr.sin_addr), inet_ntoa(servaddr.sin_addr));
     ////////// Acoes referentes ao Arquivo //////////
 
     char filename[BUFFSIZE] = {0}; 
@@ -52,14 +53,12 @@ int main(int argc, char *argv[])
     char addr[INET_ADDRSTRLEN];
     printf("Comecando a transferencia do arquivo: %s de %s\n", filename, inet_ntop(AF_INET, &clientaddr.sin_addr, addr, INET_ADDRSTRLEN));
     receberArquivo(connfd, fp, &total);
-    printf("Arquivo recebido com sucesso! Numero de Bytes = %ld\n", total);
 
     // Fechando arquivo
     fclose(fp);
   
     // Fechando socket 
     close(sockfd);
-//
 
 }
 

@@ -1,10 +1,12 @@
 /*Equipe:
+ * Antonio Carlos Couto Oliveira
+ * Caique de Souza Silva
  * Carlos Frederico D'Almeida e Mendes
  * Danilo de Andrade Peleteiro
- *
- *
- *
+ * Rafael Barretto Serejo Farias
+ * Vinicius Aragao Nascimento
  */
+
 #ifndef CAMADAAPLICACAO_H_
 #define CAMADAAPLICACAO_H_
 
@@ -43,5 +45,11 @@ void enviarArquivo(FILE *fp, int sockfd, ssize_t *total, IPs ips);
 void verificaConexao(int connfd);
 void verificaArquivoCliente(int connfd, int buff_size, char *filename);
 void receberArquivo(int sockfd, FILE *fp, ssize_t *total);
+
+// SOCKET //
+int criaSocket();
+struct sockaddr_in defineEndereco(char *address,int x);
+void bindarSocket(int sockfd, struct sockaddr_in *servaddr);
+void listenSocket(int sockfd);
 
 #endif

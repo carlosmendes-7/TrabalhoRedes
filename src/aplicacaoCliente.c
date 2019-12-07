@@ -1,18 +1,12 @@
 /*Equipe:
+ * Antonio Carlos Couto Oliveira
+ * Caique de Souza Silva
  * Carlos Frederico D'Almeida e Mendes
  * Danilo de Andrade Peleteiro
- *
- *
- *
+ * Rafael Barretto Serejo Farias
+ * Vinicius Aragao Nascimento
  */
 
-/*TODO
-deixar server aberto
-multiplos clientes
-interface grafica(?)
-*/
-
-#include "../include/socketHandler.h"
 #include "../include/camadaAplicacao.h"
 #include "../include/camadaTransporte.h"
 
@@ -76,7 +70,7 @@ int main(int argc, char *argv[])
     // Define Endereco e porta
     servaddr = defineEndereco(serverAddress, 1);
 
-    printf("%s\n", serverAddress);
+    printf("[CONEXAO]\nO endereço do Servidor escolhido foi: %s\nSolicitando Conexão com o Servidor...\n", serverAddress);
     // Tentativa de estabelecer conexao com o servidor para envio de arquivo [CAMADA DE APLICACAO]
     conectarClienteAoServidor(sockfd, &servaddr);
 
