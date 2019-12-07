@@ -19,7 +19,11 @@ void enviaDatagrama(int sockfd, FILE *fp, char *sendline, int n, int maxLine, ss
     rede.transporte = transporte;
     rede.ips = ips;
 
-    printf("[CAMADA DE REDE]\n");
-    printf("IP ORIGEM: %s\nIP DESTINO: %s\n", ips.ipCliente, ips.ipServidor);
+    if(*total==8)
+    {
+    	printf("[CAMADA DE REDE]\n");
+   		printf("IP ORIGEM: %s\nIP DESTINO: %s\n", ips.ipCliente, ips.ipServidor);
+    }
+    
     enviaQuadro(sockfd, fp, sendline, n, maxLine, total, rede);    
 }

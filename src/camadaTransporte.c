@@ -17,7 +17,12 @@ void enviaSegmento(int sockfd, FILE *fp, char *sendline, int n, int contSegmento
 	transporte.identificadorSegmento = contSegmento;
 	transporte.checksumSegmento = transporte.identificadorSegmento*2;
 
-	printf("[CAMADA DE TRANSPORTE]\n");
- 	printf("ID SEGMENTO: %d\nCHECKSUM: %d\n", transporte.identificadorSegmento, transporte.checksumSegmento);
+	if(*total%24000==0)
+	{
+		printf("[CAMADA DE TRANSPORTE]\n");
+		printf("Pacote de número %ld\n", *total);
+ 		printf("ID SEGMENTO: %d\nCHECKSUM: %d\n", transporte.identificadorSegmento, transporte.checksumSegmento);
+ 	}
+ 	
 	enviaDatagrama(sockfd, fp, sendline, n, maxLine, total, transporte, ips);	
 }

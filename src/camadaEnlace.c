@@ -12,8 +12,6 @@
 #include "../include/camadaAplicacao.h"
 #include "../include/camadaRede.h"
 
-//Enlace enlaceTestado;
-
 void enviaQuadro(int sockfd, FILE *fp, char *sendline, int n, int maxLine, ssize_t *total, Rede rede)
 {
     Enlace enlace;
@@ -21,6 +19,12 @@ void enviaQuadro(int sockfd, FILE *fp, char *sendline, int n, int maxLine, ssize
     enlace.macOrigem = "8E:2A:9F";
     enlace.macDestino = "8E:2A:9F";
     
+    if(*total==8)
+    {
+        printf("[CAMADA DE ENLACE]\n");
+        printf("MAC ORIGEM: %s\nMAC DESTINO: %s\n", enlace.macOrigem, enlace.macDestino);
+    }
+
 	*total+=n;
 	if (n != maxLine && ferror(fp))
     {
@@ -34,14 +38,4 @@ void enviaQuadro(int sockfd, FILE *fp, char *sendline, int n, int maxLine, ssize
         exit(1);
     }
     memset(sendline, 0, maxLine);
-
-    printf("[CAMADA DE ENLACE]\n");
-    printf("MAC ORIGEM: %s\nMAC DESTINO: %s\n", enlace.macOrigem, enlace.macDestino);
-
-    //enlaceTestado = enlace;
 }
-
-/*void verificaQuadro()
-{
-    printf("%d\n", enlaceTestado.rede.transporte.identificadorSegmento);
-}*/

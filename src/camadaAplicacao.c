@@ -45,7 +45,9 @@ void enviarArquivo(FILE *fp, int sockfd, ssize_t *total, IPs ips)
 {
     int contSegmento=1;
     int n; 
-    char sendline[MAX_LINE] = {0}; 
+    char sendline[MAX_LINE] = {0};
+    printf("\nIniciando a transferencia do arquivo...\n");
+    printf("A cada 24Kb será apresentado o ID do Segmento e seu Checksum...\n");
     while ((n = fread(sendline, sizeof(char), TAMANHO_SEGMENTO, fp)) > 0) 
     {
 
@@ -84,10 +86,11 @@ void receberArquivo(int sockfd, FILE *fp, ssize_t *total)
 {
     ssize_t n;
     char buff[MAX_LINE] = {0};
+    printf("A cada 24kb, será apresentado no Cliente o ID do segmento e seu checksum...\n");
     while ((n = recv(sockfd, buff, TAMANHO_SEGMENTO, 0)) > 0) 
     {
         *total+=n;
-        printf("Pacote recebido: %s\n", buff);
+        //printf("Pacote recebido: %s\n", buff);
         if (n == -1)
         {
             perror("Erro no recebimento do arquivo\n");
