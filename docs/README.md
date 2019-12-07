@@ -16,3 +16,6 @@ make -f makefileClient.make
 ## Executar Programa
 ./bin/server
 ./bin/client -s 127.0.0.1 ./bin/files-to-send/text.txt
+
+## ATENÇÃO!
+## INSTRUÇÕES MAIS DETALHADAS ENCONTRAM-SE NO RELATÓRIO FINAL DA APLICAÇÃO!
